@@ -1,0 +1,6 @@
+F:\programming\ProgrammingBasics\Autotype\bin\Debug\Autotype.exe.config
+F:\programming\ProgrammingBasics\Autotype\bin\Debug\Autotype.exe
+F:\programming\ProgrammingBasics\Autotype\bin\Debug\Autotype.pdb
+F:\programming\ProgrammingBasics\Autotype\obj\Debug\Autotype.csprojResolveAssemblyReference.cache
+F:\programming\ProgrammingBasics\Autotype\obj\Debug\Autotype.exe
+F:\programming\ProgrammingBasics\Autotype\obj\Debug\Autotype.pdb

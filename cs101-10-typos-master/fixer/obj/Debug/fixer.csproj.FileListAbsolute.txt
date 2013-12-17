@@ -1,0 +1,11 @@
+F:\downloads\cs101-10-typos-master (1)\cs101-10-typos-master\fixer\bin\Debug\fixer.exe.config
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\fixer.exe.config
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\test.txt
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\training.txt
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\test.txt.typos
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\training.txt.typos
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\fixer.exe
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\bin\Debug\fixer.pdb
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\obj\Debug\fixer.csprojResolveAssemblyReference.cache
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\obj\Debug\fixer.exe
+F:\programming\ProgrammingBasics\cs101-10-typos-master New Hope\fixer\obj\Debug\fixer.pdb
