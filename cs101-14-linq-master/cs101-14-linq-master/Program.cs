@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Threading;
+using System.Diagnostics;
 
 namespace LinqTasks
 {
@@ -26,61 +28,30 @@ namespace LinqTasks
         }
         public static IEnumerable<double> ExponentialSmooth(this IEnumerable<double> x, double a)
         {
-            return x.Select((value, index) => a * x.ElementAt(index) + (1 - a) * ((index > 0)?x.ElementAt(index - 1):x.First()));
+            var expSmoothElement = x.First();
+            foreach(var e in x)
+            {
+                yield return expSmoothElement;
+                expSmoothElement = a * e + (1 - a) * expSmoothElement;
+            }
         }
         public static List<Tuple<DateTime, int>> ReadCSV(string csvPath, char splitter)
         {
-            var dataSheet = new List<Tuple<DateTime, int>>();
-            var lines = File.ReadAllLines(csvPath);
-            foreach (var line in lines)
-            {
-                if (line[0] == '#')
-                    continue;
-
-                var data = line.Split(splitter);
-                var dataDate = DateTime.Parse(data[0]);
-                var dataValue = int.Parse(data[1]);
-
-                dataSheet.Add(new Tuple<DateTime, int>(dataDate, dataValue));
-            }
-            return dataSheet;
+            return File.ReadAllLines(csvPath).Where(line => line[0] != '#')
+                                             .Select(line => line.Split(splitter))
+                                             .Select(array => new Tuple<DateTime, int>(
+                                                                                            DateTime.Parse(array[0]),
+                                                                                            int.Parse(array[1])
+                                                                                        ))
+                                             .ToList();
         }
-        public static void Fill(this List<Tuple<DateTime, int, int>> dataSheet, List<Tuple<DateTime, int>> csvData, csvType type)
+        public static List<Tuple<DateTime, int, int>> Merge(this List<Tuple<DateTime, int>> dataSheet1, List<Tuple<DateTime, int>> dataSheet2)
         {
-            foreach (var csvTuple in csvData)
-            {
-                var csvTupleDate = csvTuple.Item1;
-
-                var eIndex = dataSheet.FindIndex(x => x.Item1 == csvTupleDate);
-
-                switch(type)
-                {
-                    case csvType.calendar:
-                        var dataDayOfWeek = csvTuple.Item2;
-                        if (eIndex != -1)
-                        {
-                            var matchingTuple = dataSheet[eIndex];
-                            var tupleDate = matchingTuple.Item1;
-                            var tupleLoad = matchingTuple.Item2;
-                            dataSheet[eIndex] = new Tuple<DateTime, int, int>(tupleDate, tupleLoad, dataDayOfWeek);
-                        }
-                        else
-                            dataSheet.Add(new Tuple<DateTime, int, int>(csvTupleDate, -1, dataDayOfWeek));
-                        break;
-                    case csvType.load:
-                        var dataLoad = csvTuple.Item2;
-                        if (eIndex != -1)
-                        {
-                            var matchingTuple = dataSheet[eIndex];
-                            var tupleDate = matchingTuple.Item1;
-                            var tupleDayOfWeek = matchingTuple.Item3;
-                            dataSheet[eIndex] = new Tuple<DateTime, int, int>(tupleDate, dataLoad, tupleDayOfWeek);
-                        }
-                        else
-                            dataSheet.Add(new Tuple<DateTime, int, int>(csvTupleDate, dataLoad, -1));
-                        break;
-                }
-            }
+            return dataSheet1.Select(tuple => new Tuple<DateTime, int, int>(
+                                                                                tuple.Item1, 
+                                                                                tuple.Item2, 
+                                                                                dataSheet2.Find(e => e.Item1 == tuple.Item1).Item2))
+                             .ToList();
         }
 	}
 
@@ -92,13 +63,11 @@ namespace LinqTasks
 		static void Main(string[] args)
         {
             #region Reading data
-            var dataSheet = new List<Tuple<DateTime, int, int>>();
 
             var loadDataSheet = DataAnalysis.ReadCSV(loadPath, ';');
             var calendarDataSheet = DataAnalysis.ReadCSV(calendarPath, '	');
 
-            dataSheet.Fill(loadDataSheet, csvType.load);
-            dataSheet.Fill(calendarDataSheet, csvType.calendar);
+            var dataSheet = loadDataSheet.Merge(calendarDataSheet);
             #endregion
 
             #region Average values
